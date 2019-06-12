@@ -60,6 +60,19 @@ function moveSnake() {
     } else {
         snake.pop()
     }
+    const isSnakeAtBorderXRight = head.x === canvas.width
+    const isSnakeAtBorderXLeft = head.x === -15
+    const isSnakeAtBorderYDown = head.y === canvas.height
+    const isSnakeAtBorderYUp = head.y === -15
+    if (isSnakeAtBorderXRight) {
+        head.x = 0
+    } else if (isSnakeAtBorderXLeft) {
+        head.x = canvas.width
+    } else if (isSnakeAtBorderYDown) {
+        head.y = 0
+    } else if (isSnakeAtBorderYUp) {
+        head.y = canvas.height
+    }
 }
 
 function changeDirection(event) {
@@ -140,4 +153,4 @@ setInterval(() => {
     moveSnake()
     drawSnake()
     drawFood()
-}, 500)
+}, 100)
