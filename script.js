@@ -28,6 +28,9 @@ let snake = [{
 let dx = 15
 let dy = 0
 
+let foodX
+let foodY
+
 
 
 function clearCanvas() {
@@ -62,34 +65,74 @@ function changeDirection(event) {
 
     const keyPressed = event.keyCode
 
+    const isGoingUp = dy === -15
+    const isGoingDown = dy === 15
+    const isGoingRight = dx === 15
+    const isGoingLeft = dx === -15
+
     switch (keyPressed) {
         case LEFT_KEY:
-            dx = -15
-            dy = 0
-            break
-        case RIGHT_KEY:
-            dx = 15
-            dy = 0
-            break
-        case UP_KEY:
-            dx = 0
-            dy = -15
-            break
-        case DOWN_KEY:
-            dx = 0
-            dy = 15
-            break
-        default:
-            break
+            if (!isGoingRight) {
+                dx = -15
+                dy = 0
+                break
+            }
+            case RIGHT_KEY:
+                if (!isGoingLeft) {
+                    dx = 15
+                    dy = 0
+                    break
+                }
+                case UP_KEY:
+                    if (!isGoingDown) {
+                        dx = 0
+                        dy = -15
+                        break
+                    }
+                    case DOWN_KEY:
+                        if (!isGoingUp) {
+                            dx = 0
+                            dy = 15
+                            break
+                        }
+                        default:
+                            break
     }
 }
 
+function randomNumber(min, max) {
+    return Math.round((Math.random() * (max - min) + min) / 15) * 15
+}
+
+function createFood() {
+    foodX = randomNumber(0, canvas.width - 15)
+    foodY = randomNumber(0, canvas.width - 15)
+
+    snake.forEach(function isFoodOnSnake(part) {
+        const foodIsOnSnake = part.x === foodX && part.y === foodY
+        if (foodIsOnSnake) {
+            createFood()
+        }
+    })
+}
+
+function drawFood() {
+    ctx.fillStyle = 'red'
+    ctx.strokeStyle = 'green'
+    ctx.strokeRect(foodX, foodY, 15, 15)
+    ctx.fillRect(foodX, foodY, 15, 15)
+}
+
+
+
 clearCanvas()
 drawSnake()
+createFood()
 
 
 setInterval(() => {
     clearCanvas()
     moveSnake()
     drawSnake()
+    drawFood()
 }, 1000)
